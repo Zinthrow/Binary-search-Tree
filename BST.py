@@ -5,11 +5,11 @@ Created on Sat Sep 23 15:43:00 2017
 """
 import random
 
-class Node(object):
+class Node(object): # Node with multiple fucntions to interact with parameters
     def __init__(self, data=None, left=None, right=None,
                  parent=None):
         self.data = data
-        self.dcounter = 1
+        self.dcounter = 1 #this is the number of duplicate nodes
         self.left = left
         self.right = right
         self.parent = parent
@@ -17,7 +17,7 @@ class Node(object):
         return self.data
     def getchildL(self):
         return self.left
-    def dcount(self):
+    def dcount(self): 
         self.dcounter += 1
     def getchildR(self):
         return self.right
@@ -30,11 +30,11 @@ class Node(object):
     def setchildR(self, newchild):
         self.right = newchild
         
-class Tree(object):
+class Tree(object): # interaction with nodes with rotate, search, delete and __str__ ascii art function
     def __init__(self, start=None, current=None):
         self.start = start
         self.current = current
-    def RotateRight(self,current):
+    def RotateRight(self,current): # for double tree deletion problems to make replacement node a leaf
         current = current
         left = current.left
         if left != None:
@@ -110,7 +110,7 @@ class Tree(object):
                     delparent.setchildL(None)
                 elif delparent.getchildR() == current:
                     delparent.setchildR(None)
-            elif current.getchildL()== None or current.getchildR()==None:
+            elif current.getchildL()== None or current.getchildR()==None: 
                 print ("single child problem")
                 if current.getchildL() != None:
                     movedchild = current.getchildL()
@@ -140,13 +140,11 @@ class Tree(object):
                     current.setparent(delparent)
                     current.setchildR(delcurrent.right)
                     current.setchildL(delcurrent.left)
-                    print ("dis one")
                 elif delparent.getchildR() == delcurrent:
                     delparent.setchildR(current)
                     current.setparent(delparent)
                     current.setchildR(delcurrent.right)
                     current.setchildL(delcurrent.left)
-                    print ("dat one")
             print ("Data: ("+str(data)+") found and removed")
         else:
             print ("data not found or deleted")
@@ -181,15 +179,15 @@ class Tree(object):
         return '\n'.join(recurse(self.start) [0])                 
 
 tre = Tree()
-testdata = list(random.sample(range(30,101), 50))
+testdata = list(random.sample(range(30,101), 50)) #generates sample data
 print (testdata)
 
-for dat in testdata:
+for dat in testdata: #makes tree of sample data
     tre.insert(dat)
 print (tre.__str__()) #ascii artwork of tree
 print ("")
 #test functions
-inp = int(input ("Enter number to delete: "))
+inp = int(input ("Enter number to delete: ")) # to choose a node to delete
 tre.delete(inp) 
 tre.search(inp)
 print (tre.__str__()) #prints tree again to confirm delete
