@@ -8,29 +8,29 @@ Created on Sat Sep 23 15:43:00 2017
 import random
 
 class Node(object):
-    def __init__(self, data=None, child_left=None, child_right=None,
+    def __init__(self, data=None, left=None, right=None,
                  parent=None):
         self.data = data
         self.dcounter = 1
-        self.child_left = child_left
-        self.child_right = child_right
+        self.left = left
+        self.right = right
         self.parent = parent
     def getdata(self):
         return self.data
     def getchildL(self):
-        return self.child_left
+        return self.left
     def dcount(self):
         self.dcounter += 1
     def getchildR(self):
-        return self.child_right
+        return self.right
     def getparent(self):
         return self.parent
     def setparent(self, newparent):
         self.parent = newparent
     def setchildL(self, newchild):
-        self.child_left = newchild
+        self.left = newchild
     def setchildR(self, newchild):
-        self.child_right = newchild
+        self.right = newchild
         
 class Tree(object):
     def __init__(self, start=None, current=None):
@@ -85,8 +85,8 @@ class Tree(object):
     def delete(self, data): #if the item sought is the root then will not work.
         self.search(data) #find node to delete
         current = self.current
-        delparent = current.getparent() #deleted node's parent
-        delcurrent = current #deleted node
+        delparent = current.getparent() #to be deleted node's parent
+        delcurrent = current #to be deleted node
         if self.search(data) == True:
             if current.getchildL() == None and current.getchildR() == None:
                 print ("leaf problem")
@@ -120,9 +120,11 @@ class Tree(object):
                 if delparent.getchildL() == delcurrent:
                     delparent.setchildL(current)
                     current.setparent(delparent)
+                    # these don't do what I want them tocurrent.setchildL(delcurrent.left)
                 elif delparent.getchildR() == delcurrent:
                     delparent.setchildR(current)
                     current.setparent(delparent)
+                    # nope but eventually current.setchildR(delcurrent.right)
             print ("Data: ("+str(data)+") found and removed")
         else:
             print ("data not found or deleted")
@@ -150,8 +152,8 @@ class Tree(object):
             lines = [' ' * left_pos + label + ' ' * (right_width - right_pos),
                      ' ' * left_pos + '/' + ' ' * (middle-2) +
                      '\\' + ' ' * (right_width - right_pos)] + \
-              [left_line + ' ' * (width - left_width - right_width) +
-               right_line
+                [left_line + ' ' * (width - left_width - right_width) + 
+                right_line
                for left_line, right_line in zip(left_lines, right_lines)]
             return lines, pos, width
         return '\n'.join(recurse(self.start) [0])                 
@@ -159,9 +161,10 @@ class Tree(object):
 tre = Tree()
 testdata = list(random.sample(range(30,101), 50))
 print (testdata)
-print (tre.__str__()) #ascii artwork of tree
+
 for dat in testdata:
     tre.insert(dat)
+print (tre.__str__()) #ascii artwork of tree
 print ("")
 tre.search(76) #test functions
 tre.delete(55) 
