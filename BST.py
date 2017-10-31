@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Sat Sep 23 15:43:00 2017
 
@@ -36,6 +34,24 @@ class Tree(object):
     def __init__(self, start=None, current=None):
         self.start = start
         self.current = current
+    def RotateRight(self,current):
+        current = current
+        left = current.left
+        if left != None:
+            left.parent = current.parent
+            if left.parent is None:
+                self.start = left
+            else:
+                if left.parent.left is current:
+                    left.parent.left = left
+                elif left.parent.right is current:
+                    left.parent.right = left
+            current.left = left.right
+            if current.left is not None:
+                current.left.parent = current
+            left.right = current
+            current.parent = left
+    
     def insert(self, dat):
         tnode = Node(dat)
         current = self.start
@@ -106,25 +122,31 @@ class Tree(object):
                     delparent.setchildR(movedchild)
             elif current.getchildL() != None and current.getchildR() != None:
                 print ("double child problem")
-                #searches for a leaf that is close but less than deleted node
+                #searches for a replacement that is just less than deleted node
                 current = current.getchildL()
-                while current.getchildL()!= None and current.getchildR()!=None:
+                while current.getchildR()!=None:
                     current = current.getchildR()
-                #deletes the leaf's parent's path to the leaf
+                if current.getchildL() != None: #makes replacement a leaf
+                    self.RotateRight(current)
+                #deletes the replacement's parent's path to the replacement
                 if current.getparent().getchildL() == current:
                     current.getparent().setchildL(None)
                 elif current.getparent().getchildR() == current:
                     current.getparent().setchildR(None)
                 #checks the paths of the deleted node's parent to confirm which
-                #side it is and place the leaf
+                #side it is and place the replacement
                 if delparent.getchildL() == delcurrent:
                     delparent.setchildL(current)
                     current.setparent(delparent)
-                    # these don't do what I want them tocurrent.setchildL(delcurrent.left)
+                    current.setchildR(delcurrent.right)
+                    current.setchildL(delcurrent.left)
+                    print ("dis one")
                 elif delparent.getchildR() == delcurrent:
                     delparent.setchildR(current)
                     current.setparent(delparent)
-                    # nope but eventually current.setchildR(delcurrent.right)
+                    current.setchildR(delcurrent.right)
+                    current.setchildL(delcurrent.left)
+                    print ("dat one")
             print ("Data: ("+str(data)+") found and removed")
         else:
             print ("data not found or deleted")
@@ -166,9 +188,8 @@ for dat in testdata:
     tre.insert(dat)
 print (tre.__str__()) #ascii artwork of tree
 print ("")
-tre.search(76) #test functions
-tre.delete(55) 
-tre.search(55)
+#test functions
+inp = int(input ("Enter number to delete: "))
+tre.delete(inp) 
+tre.search(inp)
 print (tre.__str__()) #prints tree again to confirm delete
-
-
